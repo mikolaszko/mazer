@@ -1,4 +1,5 @@
 import random
+from time import sleep
 from typing import Callable
 from pyray import *
 
@@ -9,7 +10,7 @@ CELL_PATH_W = 0x08
 CELL_VISITED = 0x10
 
 # would like to make this a user input
-MAZE_WIDTH, MAZE_HEIGHT = 60, 30
+MAZE_WIDTH, MAZE_HEIGHT = 5, 4
 
 
 SQUARE_WIDTH, SQUARE_HEIGHT = 10, 10
@@ -24,12 +25,14 @@ def main():
     visited_cnt = 0 
     stack.append((0,0))
     visited[0] = CELL_VISITED
+
     
     visited_cnt += 1 
     init_window(500, 500, "Mazer")
-    offset: Callable[[int, int], int] = lambda x, y: ((stack[-1][1] + y) * MAZE_WIDTH + stack[-1][0] + x)
+    offset: Callable[[int, int], int] = lambda x, y: (stack[-1][1] + y) * MAZE_WIDTH + (stack[-1][0] + x)
 
     while not window_should_close():
+        sleep(2)
         # this rocks
         if visited_cnt < MAZE_WIDTH * MAZE_HEIGHT:
             neighbours: list[int] = []
@@ -50,23 +53,24 @@ def main():
             if neighbours:
                 next_cell_dir = random.choice(neighbours)
 
+                print("next cell", next_cell_dir)
                 match(next_cell_dir):
                     case 0:
                         visited[offset(0, -1)] |= CELL_VISITED | CELL_PATH_S
                         visited[offset(0, 0)] |= CELL_PATH_N
-                        stack.append((stack[-1][0], stack[-1][1] - 1))
+                        stack.append((stack[-1][0] + 0, stack[-1][1] - 1))
                     case 1: 
                         visited[offset(1, 0)] |= CELL_VISITED | CELL_PATH_W
                         visited[offset(0, 0)] |= CELL_PATH_E
-                        stack.append((stack[-1][0] + 1, stack[-1][1]))
+                        stack.append((stack[-1][0] + 1, stack[-1][1]+0 ))
                     case 2:
                         visited[offset(0, 1)] |= CELL_VISITED | CELL_PATH_N
                         visited[offset(0, 0)] |= CELL_PATH_S
-                        stack.append((stack[-1][0], stack[-1][1] + 1))
+                        stack.append((stack[-1][0] + 0, stack[-1][1] + 1))
                     case 3: 
                         visited[offset(-1, 0)] |= CELL_VISITED | CELL_PATH_E
                         visited[offset(0, 0)] |= CELL_PATH_W
-                        stack.append((stack[-1][0] - 1, stack[-1][1]))
+                        stack.append((stack[-1][0] - 1, stack[-1][1] + 0))
                     case _:
                         print("ffs")
                 visited_cnt += 1
@@ -82,9 +86,10 @@ def main():
         
         # drawing section
         begin_drawing()
-        for x in range(MAZE_WIDTH):
-            for y in range(MAZE_HEIGHT):
-                if visited[x + (y * MAZE_HEIGHT)] & CELL_VISITED == 0:
+        for x in range(MAZE_WIDTH - 1):
+            for y in range(MAZE_HEIGHT - 1):
+                print("vis", x * MAZE_HEIGHT + x, visited[y * MAZE_HEIGHT + x] & CELL_VISITED, visited)
+                if visited[y * MAZE_HEIGHT + x] & CELL_VISITED:
                     draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, WHITE)
                 else:
                     draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, GREEN)
