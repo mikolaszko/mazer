@@ -10,7 +10,7 @@ CELL_PATH_W = 0x08
 CELL_VISITED = 0x10
 
 # would like to make this a user input
-MAZE_WIDTH, MAZE_HEIGHT = 5, 4
+MAZE_WIDTH, MAZE_HEIGHT = 60, 30
 
 
 SQUARE_WIDTH, SQUARE_HEIGHT = 10, 10
@@ -28,11 +28,10 @@ def main():
 
     
     visited_cnt += 1 
-    init_window(500, 500, "Mazer")
+    init_window(1000, 1000, "Mazer")
     offset: Callable[[int, int], int] = lambda x, y: (stack[-1][1] + y) * MAZE_WIDTH + (stack[-1][0] + x)
 
     while not window_should_close():
-        sleep(2)
         # this rocks
         if visited_cnt < MAZE_WIDTH * MAZE_HEIGHT:
             neighbours: list[int] = []
@@ -81,6 +80,7 @@ def main():
 
                 
 
+        sleep(0.1)
         
 
         
@@ -88,11 +88,18 @@ def main():
         begin_drawing()
         for x in range(MAZE_WIDTH - 1):
             for y in range(MAZE_HEIGHT - 1):
-                print("vis", x * MAZE_HEIGHT + x, visited[y * MAZE_HEIGHT + x] & CELL_VISITED, visited)
-                if visited[y * MAZE_HEIGHT + x] & CELL_VISITED:
+                if visited[y * MAZE_WIDTH + x] & CELL_VISITED:
                     draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, WHITE)
                 else:
                     draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, GREEN)
+
+                # draw south path
+                if visited[y * MAZE_WIDTH + x] & CELL_PATH_S:
+                    draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT) + SQUARE_HEIGHT, SQUARE_WIDTH, PATH_WIDTH + 1, WHITE)
+                # draw east passage
+                if visited[y * MAZE_WIDTH + x] & CELL_PATH_E:
+                    draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH) + SQUARE_WIDTH, y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), PATH_WIDTH + 1, SQUARE_HEIGHT, WHITE)    
+        draw_rectangle(stack[-1][0] * (PATH_WIDTH + 1 + SQUARE_WIDTH), stack[-1][1] * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, BLUE)
         clear_background(BLACK)
         end_drawing()
     close_window()
