@@ -16,7 +16,7 @@ MAZE_WIDTH, MAZE_HEIGHT = 60, 30
 SQUARE_WIDTH, SQUARE_HEIGHT = 10, 10
 
 
-PATH_WIDTH = 3
+PATH_WIDTH = 4 
 def main():
     # temporary representation 
     stack: list[tuple[int, int]] = [] # pair (x, y)
@@ -89,17 +89,17 @@ def main():
         for x in range(MAZE_WIDTH):
             for y in range(MAZE_HEIGHT):
                 if visited[y * MAZE_WIDTH + x] & CELL_VISITED:
-                    draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, WHITE)
+                    draw_rectangle(x * (PATH_WIDTH + SQUARE_WIDTH), y * (PATH_WIDTH + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, WHITE)
                 else:
-                    draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, GREEN)
+                    draw_rectangle(x * (PATH_WIDTH + SQUARE_WIDTH), y * (PATH_WIDTH + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, GREEN)
 
                 # draw south path
                 if visited[y * MAZE_WIDTH + x] & CELL_PATH_S:
-                    draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT) + SQUARE_HEIGHT, SQUARE_WIDTH, PATH_WIDTH + 1, WHITE)
+                    draw_rectangle(x * (PATH_WIDTH + SQUARE_WIDTH), y * (PATH_WIDTH + SQUARE_HEIGHT) + SQUARE_HEIGHT, SQUARE_WIDTH, PATH_WIDTH, WHITE)
                 # draw east passage
                 if visited[y * MAZE_WIDTH + x] & CELL_PATH_E:
-                    draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH) + SQUARE_WIDTH, y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), PATH_WIDTH + 1, SQUARE_HEIGHT, WHITE)    
-        draw_rectangle(stack[-1][0] * (PATH_WIDTH + 1 + SQUARE_WIDTH), stack[-1][1] * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, BLUE)
+                    draw_rectangle(x * (PATH_WIDTH + SQUARE_WIDTH) + SQUARE_WIDTH, y * (PATH_WIDTH + SQUARE_HEIGHT), PATH_WIDTH, SQUARE_HEIGHT, WHITE)    
+        draw_rectangle(stack[-1][0] * (PATH_WIDTH + SQUARE_WIDTH), stack[-1][1] * (PATH_WIDTH + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, BLUE)
         clear_background(BLACK)
         end_drawing()
     close_window()
