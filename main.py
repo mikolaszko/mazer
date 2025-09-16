@@ -86,8 +86,8 @@ def main():
         
         # drawing section
         begin_drawing()
-        for x in range(MAZE_WIDTH - 1):
-            for y in range(MAZE_HEIGHT - 1):
+        for x in range(MAZE_WIDTH):
+            for y in range(MAZE_HEIGHT):
                 if visited[y * MAZE_WIDTH + x] & CELL_VISITED:
                     draw_rectangle(x * (PATH_WIDTH + 1 + SQUARE_WIDTH), y * (PATH_WIDTH + 1 + SQUARE_HEIGHT), SQUARE_WIDTH, SQUARE_HEIGHT, WHITE)
                 else:
